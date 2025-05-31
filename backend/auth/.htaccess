@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Permitir métodos HTTP (POST, GET, etc.)
+    <Limit GET POST PUT DELETE OPTIONS>
+        Allow from all
+    </Limit>
+
+    # Headers para CORS (Cross-Origin)
+    # Eliminar Access-Control-Allow-Origin para evitar conflictos
+    Header always unset Access-Control-Allow-Origin
+    Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, PUT, DELETE"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Redireccionar errores 405 (Method Not Allowed)
+ErrorDocument 405 "Método HTTP no permitido"

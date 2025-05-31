@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pantalla Principal | Aprende+</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;">
+            <h1>Aprende+</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home.html" class="active">Inicio</a></li>
+                <li><a href="dashboard.html">Panel</a></li>
+                <li><a href="courses.html">Cursos</a></li>
+                <li><a href="progress.html">Progreso</a></li>
+                <li><a href="certificates.html">Certificados</a></li>
+                <!-- El botón de cerrar sesión solo debe mostrarse si hay sesión activa -->
+                <li><a href="../backend/auth/logout.php" class="btn" id="logoutBtn" style="display:none;">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="welcome-message">
+            <h1>Bienvenido a Aprende+</h1>
+            <p>Desde aquí puedes acceder a todas las secciones principales de la plataforma.</p>
+        </section>
+        <section class="dashboard-links">
+            <div class="dashboard-card">
+                <a href="dashboard.html">
+                    <div class="icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <h3>Panel</h3>
+                    <p>Ir al panel principal del usuario.</p>   
+                </a>
+            </div>
+            <div class="dashboard-card">
+                <a href="courses.html">
+                    <div class="icon"><i class="fas fa-book-open"></i></div>
+                    <h3>Cursos</h3>
+                    <p>Ver y continuar tus cursos.</p>
+                </a>
+            </div>
+            <div class="dashboard-card">
+                <a href="progress.html">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Progreso</h3>
+                    <p>Consulta tu avance en los cursos.</p>
+                </a>
+            </div>
+            <div class="dashboard-card">
+                <a href="certificates.html">
+                    <div class="icon"><i class="fas fa-certificate"></i></div>
+                    <h3>Certificados</h3>
+                    <p>Descarga tus certificados obtenidos.</p>
+                </a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Aprende+. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+    // Redirección profesional si no hay sesión activa (verificación real con backend)
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('../backend/auth/check_session.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.logged_in) {
+                    window.location.href = 'login.html';
+                } else {
+                    // Mostrar botón cerrar sesión solo si hay sesión
+                    document.getElementById('logoutBtn').style.display = 'inline-block';
+                }
+            })
+            .catch(() => {
+                window.location.href = 'login.html';
+            });
+    });
+    </script>
+    <script src="assets/js/dashboard.js" defer></script>
+</body>
+</html>

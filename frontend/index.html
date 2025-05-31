@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprende+ - Plataforma de aprendizaje online</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        :root {
+            --verde-suave: #a8e6cf;
+            --azul-claro: #dcedc1;
+            --azul-oscuro: #64b5f6;
+            --blanco: #ffffff;
+            --sombra: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--verde-suave), var(--azul-claro));
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        header {
+            background-color: var(--blanco);
+            box-shadow: var(--sombra);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo img {
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--azul-oscuro);
+            font-weight: 600;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover {
+            background-color: var(--azul-oscuro);
+            color: white;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, var(--verde-suave), var(--azul-oscuro));
+            color: #333;
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.4);
+        }
+
+        .btn-conoce-mas {
+            background: var(--blanco);
+        }
+        
+        .hero {
+            padding: 5rem 2rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--azul-oscuro), #333);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .feature-card {
+            background-color: var(--blanco);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--azul-oscuro);
+            margin-bottom: 1rem;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;" onerror="this.onerror=null;this.src='https://via.placeholder.com/50';">
+            <h1>Aprende+</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Inicio</a></li>
+                <li><a href="login.html" class="btn">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Aprende sin límites</h2>
+            <p>La plataforma educativa que te ayuda a dominar nuevas habilidades desde cero hasta nivel profesional.</p>
+            <div class="cta-buttons">
+                <a href="register.html" class="btn">Regístrate Gratis</a>
+                <a href="#features" class="btn btn-conoce-mas">Conoce Más</a>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3>Cursos Actualizados</h3>
+                <p>Contenido relevante y actualizado constantemente para mantenerte a la vanguardia.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </div>
+                <h3>Expertos en la Industria</h3>
+                <p>Aprende de profesionales con años de experiencia en sus respectivos campos.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3>Certificaciones</h3>
+                <p>Obtén certificados reconocidos al completar tus cursos.</p>
+            </div>
+        </section>
+        
+        <footer>
+        <p>&copy; 2023 Aprende+. Todos los derechos reservados.</p>
+        <div style="margin-top: 1rem;">
+            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-twitter"></i></a>
+            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
+            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </footer>
+
+    <!-- <script src="assets/js/main.js"></script> -->
+    <script>
+        // Efecto suave al hacer clic en enlaces del menú
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                }
+                if (targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+        // Comprobar sesión y redirigir según el rol
+        fetch('../backend/auth/check_session.php')
+            .then(async res => {
+                const text = await res.text();
+                try {
+                    const data = JSON.parse(text);
+                    if (data && typeof data === 'object' && data.logged_in && data.user && data.user.role) {
+                        // Redirige automáticamente al dashboard correcto según el rol
+                        let dashboardUrl = '';
+                        switch (data.user.role) {
+                            case 'student':
+                                dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
+                                break;
+                            case 'admin':
+                                dashboardUrl = '/AprendePlus/dashboard/admin/all_courses.php';
+                                break;
+                            case 'instructor':
+                                dashboardUrl = '/AprendePlus/dashboard/instructor/my_courses.php';
+                                break;
+                            default:
+                                dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
+                        }
+                        window.location.href = dashboardUrl;
+                    }
+                } catch (e) {
+                    // La respuesta no es JSON válido, probablemente un error del servidor o sesión no iniciada
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching session data:', error);
+            });
+    </script>
+</body>
+</html>

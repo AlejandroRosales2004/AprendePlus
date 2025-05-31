@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Aprende+</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --verde-suave: #a8e6cf;
+            --azul-claro: #dcedc1;
+            --azul-oscuro: #64b5f6;
+            --blanco: #ffffff;
+            --sombra: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, var(--verde-suave), var(--azul-claro));
+            min-height: 100vh;
+            color: #333;
+        }
+        header {
+            background-color: var(--blanco);
+            box-shadow: var(--sombra);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo img {
+            height: 40px;
+            border-radius: 50%;
+        }
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--azul-oscuro);
+            font-weight: 600;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        nav a:hover {
+            background-color: var(--azul-oscuro);
+            color: white;
+        }
+        .btn {
+            background: linear-gradient(90deg, var(--verde-suave), var(--azul-oscuro));
+            color: #333;
+            padding: 0.7rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.4);
+        }
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 2rem 2rem;
+        }
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .welcome-message h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, var(--azul-oscuro), #333);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        .welcome-message p {
+            font-size: 1.2rem;
+            color: #444;
+        }
+        .dashboard-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .dashboard-card {
+            background-color: var(--blanco);
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(100, 181, 246, 0.15);
+        }
+        .dashboard-card a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        .dashboard-card h3 {
+            font-size: 1.4rem;
+            color: var(--azul-oscuro);
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .dashboard-card p {
+            color: #555;
+            font-size: 1rem;
+        }
+        .dashboard-card .icon {
+            font-size: 2.5rem;
+            color: var(--azul-oscuro);
+            margin-bottom: 0.5rem;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            main {
+                padding: 2rem 0.5rem 1rem 0.5rem;
+            }
+            .dashboard-links {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;">
+            <h1>Aprende+</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html">Panel</a></li>
+                <li><a href="courses.html">Cursos</a></li>
+                <li><a href="progress.html">Progreso</a></li>
+                <li><a href="certificates.html">Certificados</a></li>
+                <li><a href="../backend/auth/logout.php" class="btn" id="logoutBtn" style="display:none;">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="welcome-message">
+            <h1>Bienvenido a tu Panel</h1>
+            <p>Gestiona tus cursos, revisa tu progreso y descarga tus certificados desde aquí.</p>
+        </section>
+        <section class="dashboard-links">
+            <div class="dashboard-card">
+                <a href="courses.html">
+                    <div class="icon"><i class="fas fa-book-open"></i></div>
+                    <h3>Mis Cursos</h3>
+                    <p>Explora y continúa tus cursos.</p>
+                </a>
+            </div>
+            <div class="dashboard-card">
+                <a href="progress.html">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Progreso</h3>
+                    <p>Revisa tu avance en los cursos.</p>
+                </a>
+            </div>
+            <div class="dashboard-card">
+                <a href="certificates.html">
+                    <div class="icon"><i class="fas fa-certificate"></i></div>
+                    <h3>Certificados</h3>
+                    <p>Descarga tus certificados obtenidos.</p>
+                </a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Aprende+. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+    // Redirección profesional si no hay sesión activa (verificación real con backend)
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('../backend/auth/check_session.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.logged_in) {
+                    window.location.href = 'login.html';
+                } else {
+                    // Mostrar botón cerrar sesión solo si hay sesión
+                    document.getElementById('logoutBtn').style.display = 'inline-block';
+                }
+            })
+            .catch(() => {
+                window.location.href = 'login.html';
+            });
+    });
+    </script>
+    <script src="assets/js/dashboard.js" defer></script>
+</body>
+</html>

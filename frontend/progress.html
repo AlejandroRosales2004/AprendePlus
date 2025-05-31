@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progreso | Aprende+</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;">
+            <h1>Aprende+</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html">Panel</a></li>
+                <li><a href="courses.html">Cursos</a></li>
+                <li><a href="progress.html" class="active">Progreso</a></li>
+                <li><a href="certificates.html">Certificados</a></li>
+                <li><a href="../backend/auth/logout.php" class="btn" id="logoutBtn" style="display:none;">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="welcome-message">
+            <h1>Mi Progreso</h1>
+            <p>Consulta tu avance en los cursos.</p>
+        </section>
+        <section class="dashboard-links">
+            <!-- Botón regresar universal con lógica JS robusta -->
+            <div class="dashboard-card">
+                <a href="home.html">
+                    <div class="icon"><i class="fas fa-arrow-left"></i></div>
+                    <h3>Regresar</h3>
+                    <p>Volver a la pantalla principal.</p>
+                </a>
+            </div>
+            <!-- Aquí iría la lógica para mostrar el progreso del usuario -->
+            <div class="dashboard-card">
+                <div class="icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Progreso de ejemplo</h3>
+                <p>Has completado el 50% de tus cursos.</p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Aprende+. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+    // Redirección profesional si no hay sesión activa (verificación real con backend)
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('../backend/auth/check_session.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.logged_in) {
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById('logoutBtn').style.display = 'inline-block';
+                }
+            })
+            .catch(() => {
+                window.location.href = 'login.html';
+            });
+    });
+    </script>
+    <script src="assets/js/dashboard.js" defer></script>
+</body>
+</html>
