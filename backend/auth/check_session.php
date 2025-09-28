@@ -7,13 +7,11 @@ $response = [
     'user' => null
 ];
 
-if (isset($_SESSION['user_id'])) {
+if (isset($_SESSION['user']) && is_array($_SESSION['user'])) {
     $response['logged_in'] = true;
-    $response['user'] = [
-        'id' => $_SESSION['user_id'],
-        'username' => $_SESSION['username'] ?? '',
-        'role' => $_SESSION['role'] ?? ''
-    ];
+    $response['user'] = $_SESSION['user'];
 }
 
+if (ob_get_length()) ob_end_clean();
 echo json_encode($response);
+exit;

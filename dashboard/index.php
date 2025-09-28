@@ -4,7 +4,7 @@ require_once __DIR__ . '/../backend/db/db.php';
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../login.html');
+    header('Location: /AprendePlus/frontend/login.html');
     exit;
 }
 
@@ -43,8 +43,7 @@ include 'header.php';
     <title>Panel Aprende+ | <?= htmlspecialchars(ucfirst($role)) ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
-    <script src="assets/js/dashboard.js" defer></script>
+    <link rel="stylesheet" href="/AprendePlus/dashboard/assets/css/dashboard.css">
     <style>
       body {
         margin: 0;
@@ -236,7 +235,7 @@ include 'header.php';
 <div class="student-panel">
   <aside class="student-menu">
     <div class="logo" onclick="window.history.back()" title="Volver">
-      <img src="../frontend/assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+">
+      <img src="/AprendePlus/frontend/assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+">
       <span>Aprende+</span>
     </div>
     <nav>

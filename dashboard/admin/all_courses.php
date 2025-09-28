@@ -1,17 +1,22 @@
 <?php
 // Verificar sesión de administrador
 session_start();
-if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header('Location: ../../frontend/login.html');
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+    header('Location: /AprendePlus/frontend/login.html');
     exit();
 }
 
-// Ejemplo de listado de cursos para el administrador
-$courses = [
-    ["id" => 1, "titulo" => "Programación en PHP", "estado" => "Activo"],
-    ["id" => 2, "titulo" => "Introducción a Python", "estado" => "Inactivo"],
-    ["id" => 3, "titulo" => "Diseño Web", "estado" => "Activo"],
-];
+require_once __DIR__ . '/../../backend/db/db.php';
+require_once __DIR__ . '/../includes/bubble_background.php';
+
+// Obtener cursos reales de la base de datos
+$courses = [];
+try {
+    $stmt = $conn->query('SELECT id, titulo, estado FROM cursos ORDER BY id DESC');
+    $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo '<div style="color:red;text-align:center;">Error al obtener cursos: ' . htmlspecialchars($e->getMessage()) . '</div>';
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,6 +26,7 @@ $courses = [
     <title>Todos los Cursos | Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/AprendePlus/assets/css/bubble-background.css">
     <style>
         :root {
             --verde-suave: #a8e6cf;
@@ -29,12 +35,13 @@ $courses = [
             --blanco: #ffffff;
             --sombra: 0 10px 20px rgba(0,0,0,0.1);
         }
-        body {
-            background: linear-gradient(135deg, var(--verde-suave), var(--azul-claro));
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: transparent;
             min-height: 100vh;
             color: #333;
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
         }
         .courses-table-container {
             max-width: 900px;
@@ -43,6 +50,8 @@ $courses = [
             border-radius: 15px;
             box-shadow: var(--sombra);
             padding: 2.5rem 2rem;
+            position: relative;
+            z-index: 2;
         }
         h1 {
             color: var(--azul-oscuro);
@@ -104,15 +113,16 @@ $courses = [
             }
         }
     </style>
-    <script src="../assets/js/admin_session.js"></script>
+    <script src="/AprendePlus/dashboard/admin/assets/js/admin_session.js"></script>
 </head>
 <body>
+<?php renderBubbleBackground(); ?>
     <nav style="width:100%;text-align:right;margin-bottom:1rem;">
-        <a href="../../backend/auth/logout.php" id="logoutBtn" style="display:none;color:#e74a3b;font-weight:600;text-decoration:none;margin-right:1.5rem;">Cerrar Sesión</a>
+        <a href="/AprendePlus/backend/auth/logout.php" id="logoutBtn" style="display:none;color:#e74a3b;font-weight:600;text-decoration:none;margin-right:1.5rem;">Cerrar Sesión</a>
     </nav>
     <div class="courses-table-container">
         <h1><i class="fas fa-book"></i> Todos los Cursos</h1>
-        <a href="create_course.php" class="add-btn"><i class="fas fa-plus-circle"></i> Nuevo Curso</a>
+        <a href="/AprendePlus/dashboard/admin/create_course.php" class="add-btn"><i class="fas fa-plus-circle"></i> Nuevo Curso</a>
         <table>
             <thead>
                 <tr>
@@ -123,17 +133,22 @@ $courses = [
                 </tr>
             </thead>
             <tbody>
+                <?php if (empty($courses)): ?>
+                    <tr><td colspan="4" style="text-align:center;">No hay cursos registrados.</td></tr>
+                <?php else: ?>
                 <?php foreach ($courses as $curso): ?>
                 <tr>
                     <td><?= $curso['id'] ?></td>
                     <td><?= htmlspecialchars($curso['titulo']) ?></td>
                     <td><?= htmlspecialchars($curso['estado']) ?></td>
                     <td class="actions">
-                        <a href="edit_course.php?id=<?= $curso['id'] ?>" title="Editar"><i class="fas fa-edit"></i></a>
-                        <a href="delete_course.php?id=<?= $curso['id'] ?>" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                        <a href="/AprendePlus/dashboard/admin/edit_course.php?id=<?= $curso['id'] ?>" title="Editar"><i class="fas fa-edit"></i></a>
+                        <a href="/AprendePlus/dashboard/admin/delete_course.php?id=<?= $curso['id'] ?>" title="Eliminar"><i class="fas fa-trash-alt"></i></a>
+                        <a href="/AprendePlus/dashboard/admin/manage_lessons.php?curso_id=<?= $curso['id'] ?>" title="Lecciones"><i class="fas fa-list"></i></a>
                     </td>
                 </tr>
                 <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>

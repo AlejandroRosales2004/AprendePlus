@@ -2,7 +2,7 @@
 // Verificar sesión de administrador
 session_start();
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header('Location: ../../frontend/login.html');
+    header('Location: /AprendePlus/frontend/login.html');
     exit();
 }
 
@@ -12,6 +12,8 @@ $users = [
     ["id" => 2, "username" => "juanperez", "email" => "juan@correo.com", "role" => "student"],
     ["id" => 3, "username" => "maria", "email" => "maria@correo.com", "role" => "student"],
 ];
+
+require_once __DIR__ . '/../includes/bubble_background.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,54 +23,69 @@ $users = [
     <title>Usuarios | Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/AprendePlus/frontend/assets/css/bubble-background.css">
     <style>
         :root {
-            --verde-suave: #a8e6cf;
-            --azul-claro: #dcedc1;
+            --glass-bg: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255,255,255,0.18);
             --azul-oscuro: #64b5f6;
-            --blanco: #ffffff;
-            --sombra: 0 10px 20px rgba(0,0,0,0.1);
+            --sombra: 0 10px 20px rgba(0,0,0,0.10);
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
         body {
-            background: linear-gradient(135deg, var(--verde-suave), var(--azul-claro));
             min-height: 100vh;
-            color: #333;
             font-family: 'Poppins', sans-serif;
-            margin: 0;
+            color: #222;
+            position: relative;
+            overflow-x: hidden;
         }
         .users-table-container {
-            max-width: 900px;
-            margin: 3rem auto;
-            background: var(--blanco);
-            border-radius: 15px;
+            max-width: 950px;
+            margin: 3.5rem auto;
+            background: var(--glass-bg);
+            border-radius: 22px;
             box-shadow: var(--sombra);
             padding: 2.5rem 2rem;
+            position: relative;
+            z-index: 2;
+            border: 1.5px solid var(--glass-border);
+            backdrop-filter: blur(18px) saturate(160%);
+            -webkit-backdrop-filter: blur(18px) saturate(160%);
         }
         h1 {
             color: var(--azul-oscuro);
             text-align: center;
             margin-bottom: 2rem;
             font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 1.5rem;
+            background: transparent;
         }
         th, td {
             padding: 0.9rem 0.5rem;
             text-align: left;
+            background: transparent;
         }
         th {
-            background: var(--azul-oscuro);
+            background: var(--azul-oscuro, #64b5f6);
             color: #fff;
             font-weight: 600;
+            border-radius: 8px 8px 0 0;
         }
-        tr:nth-child(even) {
-            background: #f7fafc;
+        tr:nth-child(even) td {
+            background: rgba(255,255,255,0.18);
         }
-        tr:hover {
-            background: #e3f2fd;
+        tr:hover td {
+            background: rgba(100,181,246,0.10);
         }
         .actions a {
             margin-right: 10px;
@@ -88,12 +105,17 @@ $users = [
                 font-size: 0.95rem;
             }
         }
+        nav {
+            position: relative;
+            z-index: 2;
+        }
     </style>
-    <script src="../assets/js/admin_session.js"></script>
+    <script src="/AprendePlus/dashboard/admin/assets/js/admin_session.js"></script>
 </head>
 <body>
+    <?php renderBubbleBackground(); ?>
     <nav style="width:100%;text-align:right;margin-bottom:1rem;">
-        <a href="../../backend/auth/logout.php" id="logoutBtn" style="display:none;color:#e74a3b;font-weight:600;text-decoration:none;margin-right:1.5rem;">Cerrar Sesión</a>
+        <a href="/AprendePlus/backend/auth/logout.php" id="logoutBtn" style="display:none;color:#e74a3b;font-weight:600;text-decoration:none;margin-right:1.5rem;">Cerrar Sesión</a>
     </nav>
     <div class="users-table-container">
         <h1><i class="fas fa-users"></i> Gestión de Usuarios</h1>

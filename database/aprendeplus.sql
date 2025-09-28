@@ -16,140 +16,147 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
--- --------------------------------------------------------
+--
 -- Base de datos: `aprendeplus`
--- --------------------------------------------------------
+--
+CREATE DATABASE IF NOT EXISTS `aprendeplus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `aprendeplus`;
 
 -- --------------------------------------------------------
 -- Tabla: `usuarios`
 -- --------------------------------------------------------
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
   `nombre_completo` varchar(100) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `role` enum('student','instructor','admin') NOT NULL DEFAULT 'student',
-  `avatar` varchar(255) DEFAULT 'default.png'
+  `avatar` varchar(255) DEFAULT 'default.png',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
-
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 -- --------------------------------------------------------
 -- Tabla: `cursos`
 -- --------------------------------------------------------
-CREATE TABLE `cursos` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `cursos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `titulo` varchar(100) NOT NULL,
   `descripcion` text NOT NULL,
   `instructor_id` int(11) NOT NULL,
   `creado_en` timestamp NOT NULL DEFAULT current_timestamp(),
   `imagen_portada` varchar(255) DEFAULT NULL,
   `categoria` varchar(50) DEFAULT NULL,
-  `estado` enum('borrador','publicado','archivado') DEFAULT 'borrador'
+  `estado` enum('borrador','publicado','archivado') DEFAULT 'borrador',
+  `nivel` varchar(30) DEFAULT NULL,
+  `duracion` varchar(30) DEFAULT NULL,
+  `requisitos` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `instructor_id` (`instructor_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-ALTER TABLE `cursos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `instructor_id` (`instructor_id`);
-
-ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `cursos`
-  ADD CONSTRAINT `cursos_ibfk_1` FOREIGN KEY (`instructor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+-- --------------------------------------------------------
+-- Tabla: `lecciones`
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `lecciones` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `curso_id` int(11) NOT NULL,
+  `titulo` varchar(150) NOT NULL,
+  `contenido` text NOT NULL,
+  `orden` int(11) DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `curso_id` (`curso_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 -- Tabla: `certificados`
 -- --------------------------------------------------------
-CREATE TABLE `certificados` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `certificados` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id` int(11) NOT NULL,
   `curso_id` int(11) NOT NULL,
-  `fecha_emision` timestamp NOT NULL DEFAULT current_timestamp()
+  `fecha_emision` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-ALTER TABLE `certificados`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`),
-  ADD KEY `curso_id` (`curso_id`);
-
-ALTER TABLE `certificados`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `certificados`
-  ADD CONSTRAINT `certificados_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `certificados_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
 
 -- --------------------------------------------------------
 -- Tabla: `inscripciones`
 -- --------------------------------------------------------
-CREATE TABLE `inscripciones` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `inscripciones` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id` int(11) NOT NULL,
   `curso_id` int(11) NOT NULL,
   `fecha_inscripcion` timestamp NOT NULL DEFAULT current_timestamp(),
   `porcentaje_completado` decimal(5,2) DEFAULT 0.00,
-  `ultima_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `ultima_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-ALTER TABLE `inscripciones`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`),
-  ADD KEY `curso_id` (`curso_id`);
-
-ALTER TABLE `inscripciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `inscripciones`
-  ADD CONSTRAINT `inscripciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `inscripciones_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
-
 
 -- --------------------------------------------------------
 -- Tabla: `progreso`
 -- --------------------------------------------------------
-CREATE TABLE `progreso` (
-  `id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `progreso` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id` int(11) NOT NULL,
   `curso_id` int(11) NOT NULL,
   `porcentaje_completado` decimal(5,2) DEFAULT 0.00,
-  `ultima_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `ultima_actualizacion` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  KEY `curso_id` (`curso_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-ALTER TABLE `progreso`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario_id` (`usuario_id`),
-  ADD KEY `curso_id` (`curso_id`);
+-- --------------------------------------------------------
+-- Restricciones (constraints) para tablas volcadas
+-- --------------------------------------------------------
 
-ALTER TABLE `progreso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Filtros para la tabla `cursos`
+--
+ALTER TABLE `cursos`
+  ADD CONSTRAINT `cursos_ibfk_1` FOREIGN KEY (`instructor_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
+--
+-- Filtros para la tabla `lecciones`
+--
+ALTER TABLE `lecciones`
+  ADD CONSTRAINT `lecciones_ibfk_1` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `certificados`
+--
+ALTER TABLE `certificados`
+  ADD CONSTRAINT `certificados_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `certificados_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `inscripciones`
+--
+ALTER TABLE `inscripciones`
+  ADD CONSTRAINT `inscripciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `inscripciones_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `progreso`
+--
 ALTER TABLE `progreso`
   ADD CONSTRAINT `progreso_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `progreso_ibfk_2` FOREIGN KEY (`curso_id`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
 
--- Eliminar tabla redundante si existe
-DROP TABLE IF EXISTS `usuario_cursos`;
-
-
--- Opcional: Eliminar tabla progreso si ya no se necesita
--- DROP TABLE IF EXISTS `progreso`;
-
 -- --------------------------------------------------------
--- Datos iniciales para la tabla `usuarios`
+-- Volcado de datos para la tabla `usuarios`
 -- --------------------------------------------------------
-INSERT INTO `usuarios` (`id`, `username`, `email`, `password`, `created_at`, `role`) VALUES
-(1, 'testuser', 'test@example.com', 'hashedpassword', '2025-05-02 09:00:52', 'student'),
-(2, 'AlejandroRosales', 'ga526969@uaeh.edu.mx', '$2y$10$G32DI0D7f3cINAQ1u5u89uf.9umarrHPmazvLZYjj0p51MVLfQGZm', '2025-05-02 09:52:16', 'admin'),
-(3, 'ximena', 'ximena@example.com', '$2y$10$80QTGO1F.xp3ucmKWvFd5eVbcG74UHULHfvJ0w/ck4SZTWVBSH/m6', '2025-05-02 17:13:11', 'student'),
-(4, 'admin', 'admin@ejemplo.com', '$2y$10$adminhash', '2025-05-02 20:30:00', 'admin');
+INSERT INTO `usuarios` (`username`, `email`, `password`, `created_at`, `role`) VALUES
+('testuser', 'test@example.com', 'hashedpassword', '2025-05-02 09:00:52', 'student'),
+('AlejandroRosales', 'ga526969@uaeh.edu.mx', '$2y$10$G32DI0D7f3cINAQ1u5u89uf.9umarrHPmazvLZYjj0p51MVLfQGZm', '2025-05-02 09:52:16', 'admin'),
+('ximena', 'ximena@example.com', '$2y$10$80QTGO1F.xp3ucmKWvFd5eVbcG74UHULHfvJ0w/ck4SZTWVBSH/m6', '2025-05-02 17:13:11', 'student'),
+('admin', 'admin@ejemplo.com', '$2y$10$adminhash', '2025-05-02 20:30:00', 'admin');
 
 COMMIT;
 

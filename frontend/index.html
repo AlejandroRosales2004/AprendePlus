@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/bubble-background.css">
     <style>
         :root {
             --verde-suave: #a8e6cf;
@@ -24,9 +25,11 @@
         }
         
         body {
-            background: linear-gradient(135deg, var(--verde-suave), var(--azul-claro));
+            background: none !important;
             min-height: 100vh;
             color: #333;
+            position: relative;
+            overflow-x: hidden;
         }
         
         header {
@@ -182,6 +185,18 @@
     </style>
 </head>
 <body>
+    <div class="bubble-background">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
     <header>
         <div class="logo">
             <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;" onerror="this.onerror=null;this.src='https://via.placeholder.com/50';">
@@ -189,8 +204,12 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html" class="active">Inicio</a></li>
-                <li><a href="login.html" class="btn">Iniciar Sesión</a></li>
+                <li><a href="index.html">Panel</a></li>
+                <li><a href="courses.html">Cursos</a></li>
+                <li><a href="progress.html">Progreso</a></li>
+                <li><a href="certificates.html">Certificados</a></li>
+                <li><a href="login.html" class="btn" id="loginBtn" style="display:inline-block;">Iniciar Sesión</a></li>
+                <li><a href="../backend/auth/logout.php" class="btn" id="logoutBtn" style="display:none;">Cerrar Sesión</a></li>
             </ul>
         </nav>
     </header>
@@ -243,58 +262,68 @@
 
     <!-- <script src="assets/js/main.js"></script> -->
     <script>
-        // Efecto suave al hacer clic en enlaces del menú
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') {
-                    e.preventDefault();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    return;
+        // Script para mostrar/ocultar botones de sesión antes de cualquier lógica de login
+        document.addEventListener('DOMContentLoaded', function() {
+            function getBackendPath(file) {
+                if (window.location.pathname.includes('/frontend/')) {
+                    return '../backend/auth/' + file;
                 }
-                if (targetId.startsWith('#')) {
-                    e.preventDefault();
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
+                return 'backend/auth/' + file;
+            }
+            fetch(getBackendPath('check_session.php'))
+                .then(res => res.json())
+                .then(data => {
+                    if (data.logged_in) {
+                        document.getElementById('logoutBtn').style.display = 'inline-block';
+                        document.getElementById('loginBtn').style.display = 'none';
+                    } else {
+                        document.getElementById('logoutBtn').style.display = 'none';
+                        document.getElementById('loginBtn').style.display = 'inline-block';
                     }
-                }
-            });
+                })
+                .catch(() => {
+                    document.getElementById('logoutBtn').style.display = 'none';
+                    document.getElementById('loginBtn').style.display = 'inline-block';
+                });
         });
 
-        // Comprobar sesión y redirigir según el rol
-        fetch('../backend/auth/check_session.php')
-            .then(async res => {
-                const text = await res.text();
-                try {
-                    const data = JSON.parse(text);
-                    if (data && typeof data === 'object' && data.logged_in && data.user && data.user.role) {
-                        // Redirige automáticamente al dashboard correcto según el rol
-                        let dashboardUrl = '';
-                        switch (data.user.role) {
-                            case 'student':
-                                dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
-                                break;
-                            case 'admin':
-                                dashboardUrl = '/AprendePlus/dashboard/admin/all_courses.php';
-                                break;
-                            case 'instructor':
-                                dashboardUrl = '/AprendePlus/dashboard/instructor/my_courses.php';
-                                break;
-                            default:
-                                dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
+        function getBackendPath(file) {
+            if (window.location.pathname.includes('/frontend/')) {
+                return '../backend/auth/' + file;
+            }
+            return 'backend/auth/' + file;
+        }
+        function isPhpServer() {
+            return location.protocol.startsWith('http') &&
+                (location.hostname === 'localhost' || location.hostname === '127.0.0.1') &&
+                location.port !== '5500';
+        }
+        if (isPhpServer()) {
+            fetch(getBackendPath('check_session.php'))
+                .then(async res => {
+                    const text = await res.text();
+                    try {
+                        const data = JSON.parse(text);
+                        if (data && typeof data === 'object' && data.logged_in && data.user && data.user.role) {
+                            let dashboardUrl = '';
+                            switch (data.user.role) {
+                                case 'student':
+                                    dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
+                                    break;
+                                case 'admin':
+                                    dashboardUrl = '/AprendePlus/dashboard/admin/all_courses.php';
+                                    break;
+                                case 'instructor':
+                                    dashboardUrl = '/AprendePlus/dashboard/instructor/my_courses.php';
+                                    break;
+                                default:
+                                    dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
+                            }
+                            window.location.href = dashboardUrl;
                         }
-                        window.location.href = dashboardUrl;
-                    }
-                } catch (e) {
-                    // La respuesta no es JSON válido, probablemente un error del servidor o sesión no iniciada
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching session data:', error);
-            });
+                    } catch (e) {}
+                });
+        }
     </script>
 </body>
 </html>

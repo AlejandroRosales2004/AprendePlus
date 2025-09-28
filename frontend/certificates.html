@@ -53,20 +53,21 @@
     <script>
     // Redirección profesional si no hay sesión activa (verificación real con backend)
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('../backend/auth/check_session.php')
+        fetch('/AprendePlus/backend/auth/check_session.php')
             .then(res => res.json())
             .then(data => {
+                console.log('Respuesta de check_session.php:', data); // <-- Línea de depuración opcional
                 if (!data.logged_in) {
                     window.location.href = 'login.html';
                 } else {
                     document.getElementById('logoutBtn').style.display = 'inline-block';
                 }
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error('Error en fetch:', err); // <-- Línea de depuración opcional
                 window.location.href = 'login.html';
             });
     });
     </script>
-    <script src="assets/js/dashboard.js" defer></script>
 </body>
 </html>

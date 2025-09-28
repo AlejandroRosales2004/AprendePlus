@@ -1,10 +1,24 @@
 <?php
-// Simulación de cursos inscritos del estudiante
-$courses = [
-    ["id" => 1, "titulo" => "Programación en PHP", "progreso" => 60],
-    ["id" => 2, "titulo" => "Introducción a Python", "progreso" => 100],
-    ["id" => 3, "titulo" => "Diseño Web", "progreso" => 35],
-];
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /AprendePlus/frontend/login.html');
+    exit;
+}
+require_once __DIR__ . '/../../backend/db/db.php';
+require_once __DIR__ . '/../includes/bubble_background.php';
+$user_id = $_SESSION['user_id'];
+
+// Obtener todos los cursos inscritos y su progreso
+$stmt = $conn->prepare('SELECT c.id, c.titulo, c.descripcion, IFNULL(p.porcentaje_completado,0) as progreso, IFNULL(p.ultima_actualizacion,NOW()) as ultima_actualizacion FROM inscripciones i JOIN cursos c ON i.curso_id = c.id LEFT JOIN progreso p ON p.usuario_id = i.usuario_id AND p.curso_id = i.curso_id WHERE i.usuario_id = ?');
+$stmt->bindValue(1, $user_id, PDO::PARAM_INT);
+$stmt->execute();
+$courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+foreach ($courses as &$row) {
+    $row['progreso'] = round((float)$row['progreso'], 2);
+    $row['tiene_certificado'] = $row['progreso'] >= 100;
+}
+unset($row);
+$stmt = null;
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -12,187 +26,189 @@ $courses = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Cursos | Aprende+</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/AprendePlus/assets/css/bubble-background.css">
     <style>
-      body {
+      :root {
+        --primary: #1dd1a1;
+        --secondary: #54a0ff;
+        --bg: #f7fafc;
+        --white: #fff;
+        --text: #222;
+        --muted: #888;
+        --shadow: 0 4px 24px rgba(44,62,80,0.08);
+        --radius: 16px;
+      }
+      html, body {
         margin: 0;
+        padding: 0;
         font-family: 'Poppins', Arial, sans-serif;
-        background: linear-gradient(120deg, #1dd1a1 0%, #54a0ff 100%);
+        background: transparent;
         min-height: 100vh;
-        overflow-x: hidden;
+        color: var(--text);
+        background-repeat: no-repeat;
+        background-attachment: fixed;
       }
       .student-panel {
-        display: flex;
         min-height: 100vh;
-        position: relative;
-      }
-      .student-menu {
-        width: 230px;
-        background: #f7fafc;
         display: flex;
         flex-direction: column;
-        align-items: stretch;
-        padding: 2.5rem 0 2rem 0;
-        box-shadow: 2px 0 16px rgba(44,62,80,0.08);
-        z-index: 10;
-        border-top-right-radius: 32px;
-        border-bottom-right-radius: 32px;
+        background: transparent;
+      }
+      .student-menu {
+        width: 100%;
+        background: var(--white);
+        box-shadow: var(--shadow);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 2.5vw;
+        position: sticky;
+        top: 0;
+        z-index: 100;
       }
       .student-menu .logo {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        margin-bottom: 2.7rem;
+        gap: 0.7rem;
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--primary);
         cursor: pointer;
-        transition: transform 0.18s;
-      }
-      .student-menu .logo:hover {
-        transform: scale(1.04) rotate(-2deg);
+        user-select: none;
       }
       .student-menu .logo img {
-        width: 60px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
-        margin-bottom: 0.6rem;
-        box-shadow: 0 2px 12px rgba(29,209,161,0.10);
-      }
-      .student-menu .logo span {
-        font-weight: 800;
-        color: #1dd1a1;
-        font-size: 1.25rem;
-        letter-spacing: 1px;
-        text-shadow: 0 1px 8px #fff;
+        box-shadow: 0 2px 8px rgba(84,160,255,0.10);
       }
       .student-menu nav {
         display: flex;
-        flex-direction: column;
-        gap: 0.7rem;
+        gap: 1.2rem;
+        align-items: center;
       }
       .menu-item {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        padding: 1.1rem 1.7rem;
-        color: #19795a;
+        gap: 0.5rem;
+        padding: 0.5rem 1.1rem;
+        border-radius: 22px;
+        font-size: 1.05rem;
         font-weight: 600;
-        border-left: 4px solid transparent;
-        border-radius: 0 18px 18px 0;
-        background: transparent;
+        color: var(--text);
+        background: none;
+        border: none;
+        transition: background 0.18s, color 0.18s;
         text-decoration: none;
-        font-size: 1.08rem;
-        letter-spacing: 0.2px;
-        transition: background 0.18s, border-color 0.18s, color 0.18s, box-shadow 0.18s;
-        position: relative;
       }
-      .menu-item i {
-        font-size: 1.25rem;
-        min-width: 22px;
-        color: #1dd1a1;
-        transition: color 0.18s;
+      .menu-item.active, .menu-item:hover {
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        color: var(--white);
+        box-shadow: 0 2px 8px rgba(84,160,255,0.10);
       }
       .menu-item.active {
-        background: #c6f3e6;
-        border-left: 4px solid #1dd1a1;
-        color: #0e5e47;
-        box-shadow: 0 2px 12px rgba(29,209,161,0.07);
+        /* Solo el activo, sin hover permanente */
+        pointer-events: none;
       }
-      .menu-item.active i {
-        color: #0e5e47;
-      }
-      .menu-item:hover:not(.active) {
-        background: #e0f7f1;
-        color: #1dd1a1;
-        box-shadow: 0 2px 8px rgba(29,209,161,0.06);
-      }
-      .menu-item:hover:not(.active) i {
-        color: #54a0ff;
+      .btn {
+        display: none;
       }
       .student-content {
-        flex: 1;
-        padding: 3.2rem 2.2rem 2.2rem 2.2rem;
-        border-radius: 0 0 0 38px;
-        min-height: 100vh;
-        z-index: 1;
-        background: none;
-        box-shadow: none;
-        position: relative;
+        max-width: 1100px;
+        margin: 2.5rem auto 0 auto;
+        padding: 0 1.5rem 2.5rem 1.5rem;
+        width: 100%;
       }
       h1 {
-        color: #1dd1a1;
-        text-align: center;
+        color: var(--primary);
+        text-align: left;
         margin-bottom: 2.2rem;
-        font-size: 2.2rem;
+        font-size: 2.3rem;
         font-weight: 800;
         letter-spacing: 0.5px;
         text-shadow: 0 2px 12px rgba(84,160,255,0.08);
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
       }
       .courses-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 2.2rem;
       }
       .course-card {
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 2px 16px rgba(44,62,80,0.08);
-        padding: 1.7rem 1.2rem 1.2rem 1.2rem;
-        text-align: center;
+        background: var(--white);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 2.1rem 1.3rem 1.3rem 1.3rem;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
         transition: box-shadow 0.18s, transform 0.18s;
         position: relative;
+        min-height: 210px;
       }
       .course-card:hover {
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.13);
-        transform: translateY(-6px) scale(1.03);
+        transform: translateY(-4px) scale(1.02);
       }
       .course-card h3 {
         font-size: 1.18rem;
         margin-bottom: 0.7rem;
-        color: #19795a;
+        color: var(--secondary);
         font-weight: 700;
-        letter-spacing: 0.2px;
       }
       .progress-bar {
-        background: #f0f0f0;
-        border-radius: 10px;
+        background: #e3f2fd;
+        border-radius: 8px;
         overflow: hidden;
         height: 13px;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.7rem;
         width: 100%;
       }
       .progress-bar-inner {
-        background: linear-gradient(90deg, #1dd1a1, #54a0ff);
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
         height: 100%;
         transition: width 0.3s;
       }
       .course-card span {
-        font-size: 0.98rem;
-        color: #555;
+        font-size: 1.01rem;
+        color: var(--muted);
         font-weight: 500;
+      }
+      .ultima-actualizacion {
+        font-size: 0.93em;
+        color: #aaa;
+        margin-bottom: 0.5rem;
+        display: block;
       }
       .btn-detalle {
         display: inline-block;
-        background: linear-gradient(90deg, #1dd1a1, #54a0ff);
-        color: #fff;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        color: var(--white);
         padding: 0.5rem 1.3rem;
         border-radius: 22px;
         font-weight: 700;
         text-decoration: none;
         transition: all 0.22s;
-        margin-top: 0.8rem;
+        margin-top: 1.1rem;
         border: none;
         cursor: pointer;
         font-size: 1.01rem;
         box-shadow: 0 2px 8px rgba(84,160,255,0.08);
       }
       .btn-detalle:hover {
-        background: linear-gradient(90deg, #54a0ff, #1dd1a1);
-        color: #fff;
+        background: linear-gradient(90deg, var(--secondary), var(--primary));
+        color: var(--white);
         transform: scale(1.06) translateY(-2px);
         box-shadow: 0 6px 24px rgba(84,160,255,0.13);
       }
       .certificado {
         display: inline-block;
-        margin-top: 0.7rem;
+        margin-top: 1.1rem;
         background: #e8f5e9;
         color: #388e3c;
         border-left: 4px solid #388e3c;
@@ -203,143 +219,83 @@ $courses = [
         box-shadow: 0 1px 6px rgba(56,142,60,0.07);
       }
       @media (max-width: 900px) {
-        .student-panel { flex-direction: column; }
-        .student-menu { width: 100%; flex-direction: row; justify-content: center; padding: 1.2rem 0; border-radius: 0; }
-        .student-menu nav { flex-direction: row; gap: 1.2rem; }
-        .student-content { border-radius: 0; padding: 1.5rem 0.5rem; }
+        .student-content { padding: 1rem 0.5rem; }
+        .courses-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+        .student-menu { flex-direction: column; align-items: flex-start; padding: 0.7rem 1rem; }
+        .student-menu nav { flex-direction: column; gap: 0.5rem; width: 100%; }
+        .student-menu .logo { margin-bottom: 0.7rem; }
       }
-      @media (max-width: 700px) {
-        .student-content { padding: 1rem 0.3rem; }
-        .student-menu .logo { display: none; }
-        .courses-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+      @media (max-width: 600px) {
+        .student-content { padding: 0.5rem 0.1rem; }
+        h1 { font-size: 1.3rem; }
+        .course-card { padding: 1.1rem 0.7rem; min-height: 160px; }
+        .student-menu { padding: 0.5rem 0.5rem; }
+        .student-menu .logo img { width: 32px; height: 32px; }
       }
-      #bouncing-balls-bg {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100vw; height: 100vh;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-        background: rgba(255,255,255,0.03);
+      /* Menú hamburguesa */
+      .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: var(--primary);
+        margin-left: 1rem;
+        cursor: pointer;
       }
-      .bouncing-ball {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.5;
-        filter: blur(1px);
-        pointer-events: none;
-        transform: translate3d(0,0,0);
-        will-change: transform;
-        box-shadow: 0 0 15px 2px rgba(255,255,255,0.3);
+      @media (max-width: 900px) {
+        .menu-toggle { display: block; }
+        .student-menu nav { display: none; width: 100%; }
+        .student-menu.open nav { display: flex; }
       }
-      .student-menu, .student-content { position: relative; z-index: 2; }
     </style>
 </head>
 <body>
-<div id="bouncing-balls-bg"></div>
+<?php renderBubbleBackground(); ?>
 <div class="student-panel">
-  <aside class="student-menu">
-    <div class="logo" style="cursor:pointer;" onclick="window.history.back()" title="Volver">
-      <img src="../../frontend/assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+">
+  <header class="student-menu">
+    <div class="logo" onclick="window.location.href='dashboard.php'" title="Volver al panel">
+      <img src="/AprendePlus/frontend/assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+">
       <span>Aprende+</span>
     </div>
+    <button class="menu-toggle" aria-label="Menú de navegación" type="button"><i class="fas fa-bars"></i></button>
     <nav>
-      <a href="courses.php" class="menu-item active"><i class="fas fa-book-open"></i><span>Mis Cursos</span></a>
-      <a href="progress.php" class="menu-item"><i class="fas fa-chart-bar"></i><span>Mi Progreso</span></a>
-      <a href="certificates.php" class="menu-item"><i class="fas fa-medal"></i><span>Certificados</span></a>
-      <!-- El botón de cerrar sesión solo debe mostrarse si hay sesión activa -->
-      <a href="../../backend/logout.php" class="btn" style="display:none;">Cerrar Sesión</a>
+      <a href="/AprendePlus/dashboard/student/courses.php" class="menu-item active"><i class="fas fa-book-open"></i><span>Mis Cursos</span></a>
+      <a href="/AprendePlus/dashboard/student/progress.php" class="menu-item"><i class="fas fa-chart-bar"></i><span>Mi Progreso</span></a>
+      <a href="/AprendePlus/dashboard/student/certificates.php" class="menu-item"><i class="fas fa-medal"></i><span>Certificados</span></a>
+      <a href="/AprendePlus/backend/logout.php" class="btn">Cerrar Sesión</a>
     </nav>
-  </aside>
+  </header>
   <main class="student-content">
     <h1><i class="fas fa-book"></i> Mis Cursos</h1>
     <div class="courses-grid">
-      <?php foreach ($courses as $curso): ?>
-      <div class="course-card">
-        <h3><?= htmlspecialchars($curso['titulo']) ?></h3>
-        <div class="progress-bar">
-          <div class="progress-bar-inner" style="width: <?= $curso['progreso'] ?>%"></div>
+      <?php if (empty($courses)): ?>
+        <div class="course-card"><h3>No tienes cursos inscritos aún.</h3></div>
+      <?php else: ?>
+        <?php foreach ($courses as $curso): ?>
+        <div class="course-card">
+          <h3><?= htmlspecialchars($curso['titulo']) ?></h3>
+          <div class="progress-bar">
+            <div class="progress-bar-inner" style="width: <?= $curso['progreso'] ?>%"></div>
+          </div>
+          <span><?= $curso['progreso'] ?>% completado</span>
+          <?php if ($curso['ultima_actualizacion']): ?>
+            <span class="ultima-actualizacion">Última actualización: <?= date('d M Y H:i', strtotime($curso['ultima_actualizacion'])) ?></span>
+          <?php endif; ?>
+          <a href="/AprendePlus/dashboard/student/course_detail.php?id=<?= $curso['id'] ?>" class="btn-detalle"><i class="fas fa-eye"></i> Ver Detalle</a>
+          <?php if ($curso['tiene_certificado']): ?>
+          <div class="certificado"><i class="fas fa-certificate"></i> Certificado disponible</div>
+          <?php endif; ?>
         </div>
-        <span><?= $curso['progreso'] ?>% completado</span><br>
-        <a href="course_detail.php?id=<?= $curso['id'] ?>" class="btn-detalle"><i class="fas fa-eye"></i> Ver Detalle</a>
-        <?php if ($curso['progreso'] >= 100): ?>
-        <div class="certificado"><i class="fas fa-certificate"></i> Certificado disponible</div>
-        <?php endif; ?>
-      </div>
-      <?php endforeach; ?>
+        <?php endforeach; ?>
+      <?php endif; ?>
     </div>
   </main>
 </div>
 <script>
-// Pelotitas rebotando
-const ballConfig = {
-  colors: ['rgba(29, 209, 161, 0.7)', 'rgba(84, 160, 255, 0.7)', 'rgba(254, 202, 87, 0.7)'],
-  count: 15,
-  minSize: 30,
-  maxSize: 80,
-  speed: 2
-};
-const balls = [];
-const bg = document.getElementById('bouncing-balls-bg');
-function createBalls() {
-  bg.innerHTML = '';
-  balls.length = 0;
-  for (let i = 0; i < ballConfig.count; i++) {
-    const size = Math.random() * (ballConfig.maxSize - ballConfig.minSize) + ballConfig.minSize;
-    const ball = document.createElement('div');
-    ball.className = 'bouncing-ball';
-    ball.style.width = ball.style.height = `${size}px`;
-    ball.style.background = ballConfig.colors[Math.floor(Math.random() * ballConfig.colors.length)];
-    const ballObj = {
-      element: ball,
-      x: Math.random() * (window.innerWidth - size),
-      y: Math.random() * (window.innerHeight - size),
-      vx: (Math.random() - 0.5) * ballConfig.speed,
-      vy: (Math.random() - 0.5) * ballConfig.speed,
-      size: size
-    };
-    bg.appendChild(ball);
-    balls.push(ballObj);
-  }
-}
-function animate() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  balls.forEach(ball => {
-    ball.x += ball.vx;
-    ball.y += ball.vy;
-    if (ball.x <= 0 || ball.x >= width - ball.size) ball.vx *= -1;
-    if (ball.y <= 0 || ball.y >= height - ball.size) ball.vy *= -1;
-    ball.element.style.transform = `translate3d(${ball.x}px, ${ball.y}px, 0)`;
-  });
-  requestAnimationFrame(animate);
-}
-function initBalls() {
-  createBalls();
-  animate();
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(createBalls, 100);
-  });
-}
-document.addEventListener('DOMContentLoaded', initBalls);
-
-// Redirección profesional si no hay sesión activa (verificación real con backend)
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('../../backend/auth/check_session.php')
-        .then(res => res.json())
-        .then(data => {
-            if (!data.logged_in) {
-                window.location.href = '../../frontend/login.html';
-            } else {
-                // Mostrar botón cerrar sesión solo si hay sesión
-                document.querySelectorAll('a.btn[href*="logout"]').forEach(btn => btn.style.display = 'inline-block');
-            }
-        })
-        .catch(() => {
-            window.location.href = '../../frontend/login.html';
-        });
+const menuToggle = document.querySelector('.menu-toggle');
+const studentMenu = document.querySelector('.student-menu');
+menuToggle.addEventListener('click', () => {
+  studentMenu.classList.toggle('open');
 });
 </script>
 </body>

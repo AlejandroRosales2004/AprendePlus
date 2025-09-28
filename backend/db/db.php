@@ -16,7 +16,8 @@ try {
     // echo "Conexión exitosa a la base de datos.";
 } catch (PDOException $e) {
     // Manejo de errores
-    die("Error de conexión: " . $e->getMessage());
+    // Lanzar excepción para que el script principal la capture y devuelva JSON
+    throw new Exception("Error de conexión: " . $e->getMessage());
 }
 
 ini_set('display_errors', 1);

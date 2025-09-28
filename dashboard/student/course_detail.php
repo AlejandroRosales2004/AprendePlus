@@ -1,16 +1,46 @@
 <?php
-// Simulación de obtención de datos del curso por ID (en producción, consulta a la base de datos)
-$id = $_GET['id'] ?? 1;
-$curso = [
-    'id' => $id,
-    'titulo' => 'Programación en PHP',
-    'descripcion' => 'Aprende a programar en PHP desde cero hasta avanzado.',
-    'contenido' => "<ul><li>Introducción a PHP</li><li>Variables y Tipos de Datos</li><li>Estructuras de Control</li><li>Funciones</li><li>POO en PHP</li><li>Acceso a Bases de Datos</li><li>Proyecto Final</li></ul>"
-];
-// Simulación de progreso del estudiante
-$progreso = 60; // porcentaje
-// Simulación de certificado
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /AprendePlus/frontend/login.html');
+    exit;
+}
+require_once __DIR__ . '/../../backend/db/db.php';
+
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$user_id = $_SESSION['user_id'];
+
+// Obtener datos del curso
+$stmt = $conn->prepare('SELECT id, titulo, descripcion FROM cursos WHERE id = ?');
+$stmt->bindValue(1, $id, PDO::PARAM_INT);
+$stmt->execute();
+$curso = $stmt->fetch(PDO::FETCH_ASSOC);
+$stmt = null;
+if (!$curso) {
+    echo '<h2>Curso no encontrado</h2>';
+    exit;
+}
+
+// Obtener progreso del usuario en este curso
+$stmt = $conn->prepare('SELECT IFNULL(porcentaje_completado,0) as progreso, IFNULL(ultima_actualizacion,NOW()) as ultima_actualizacion FROM progreso WHERE usuario_id = ? AND curso_id = ?');
+$stmt->bindValue(1, $user_id, PDO::PARAM_INT);
+$stmt->bindValue(2, $id, PDO::PARAM_INT);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$progreso = $row ? round((float)$row['progreso'],2) : 0;
+$ultima_actualizacion = $row ? $row['ultima_actualizacion'] : '';
 $tiene_certificado = $progreso >= 100;
+$stmt = null;
+
+// Obtener lecciones (si existe tabla lecciones)
+$lecciones = [];
+$q = $conn->query("SHOW TABLES LIKE 'lecciones'");
+if ($q && $q->rowCount()) {
+    $stmt = $conn->prepare('SELECT id, titulo FROM lecciones WHERE curso_id = ?');
+    $stmt->bindValue(1, $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $lecciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $stmt = null;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -99,29 +129,35 @@ $tiene_certificado = $progreso >= 100;
         <div class="contenido">
             <strong>Contenido del Curso:</strong>
             <div style="margin-top:0.5rem;">
-                <?= $curso['contenido'] ?>
+                <?= nl2br(htmlspecialchars($curso['contenido'])) ?>
             </div>
         </div>
         <div class="progreso">
             <strong>Progreso del Curso:</strong>
             <div class="progress-bar">
-                <div class="progress-bar-inner"></div>
+                <div class="progress-bar-inner" style="width: <?= $progreso ?>%"></div>
             </div>
             <span><?= $progreso ?>% completado</span>
+            <?php if ($ultima_actualizacion): ?>
+                <br><span style="font-size:0.95em;color:#888;">Última actualización: <?= date('d M Y H:i', strtotime($ultima_actualizacion)) ?></span>
+            <?php endif; ?>
         </div>
         <?php if ($tiene_certificado): ?>
             <div class="certificado">
                 <i class="fas fa-certificate"></i> ¡Felicidades! Has completado el curso y puedes descargar tu certificado.
             </div>
         <?php endif; ?>
-        <a href="courses.php" style="display:inline-block;margin-top:1rem;color:var(--azul-oscuro);text-decoration:none;font-weight:600;">&larr; Volver a mis cursos</a>
+        <?php if (!empty($lecciones)): ?>
+        <div class="lecciones">
+            <strong>Lecciones:</strong>
+            <ul>
+                <?php foreach ($lecciones as $l): ?>
+                    <li><?= htmlspecialchars($l['titulo']) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <?php endif; ?>
+        <a href="/AprendePlus/dashboard/student/courses.php" style="display:inline-block;margin-top:1rem;color:var(--azul-oscuro);text-decoration:none;font-weight:600;">&larr; Volver a mis cursos</a>
     </div>
-    <script>
-        // Barra de progreso animada y robusta
-        document.addEventListener('DOMContentLoaded', function() {
-            var progress = document.querySelector('.progress-bar-inner');
-            if(progress) progress.style.width = '<?= $progreso ?>%';
-        });
-    </script>
 </body>
 </html>

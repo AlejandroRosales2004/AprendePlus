@@ -214,24 +214,5 @@
     <footer>
         <p>&copy; 2025 Aprende+. Todos los derechos reservados.</p>
     </footer>
-    <script>
-    // Redirección profesional si no hay sesión activa (verificación real con backend)
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('../backend/auth/check_session.php')
-            .then(res => res.json())
-            .then(data => {
-                if (!data.logged_in) {
-                    window.location.href = 'login.html';
-                } else {
-                    // Mostrar botón cerrar sesión solo si hay sesión
-                    document.getElementById('logoutBtn').style.display = 'inline-block';
-                }
-            })
-            .catch(() => {
-                window.location.href = 'login.html';
-            });
-    });
-    </script>
-    <script src="assets/js/dashboard.js" defer></script>
 </body>
 </html>

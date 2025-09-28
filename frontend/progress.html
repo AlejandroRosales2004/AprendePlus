@@ -38,12 +38,8 @@
                     <p>Volver a la pantalla principal.</p>
                 </a>
             </div>
-            <!-- Aquí iría la lógica para mostrar el progreso del usuario -->
-            <div class="dashboard-card">
-                <div class="icon"><i class="fas fa-chart-line"></i></div>
-                <h3>Progreso de ejemplo</h3>
-                <p>Has completado el 50% de tus cursos.</p>
-            </div>
+            <!-- Progreso dinámico de cursos -->
+            <div id="progress-cards"></div>
         </section>
     </main>
     <footer>
@@ -59,6 +55,43 @@
                     window.location.href = 'login.html';
                 } else {
                     document.getElementById('logoutBtn').style.display = 'inline-block';
+                    // Obtener progreso real
+                    fetch('../backend/user/progress.php')
+                        .then(res => res.json())
+                        .then(data => {
+                            const container = document.getElementById('progress-cards');
+                            if (!data.ok) {
+                                container.innerHTML = '<div class="dashboard-card"><h3>Error al obtener el progreso.</h3></div>';
+                                return;
+                            }
+                            const cursos = data.cursos;
+                            if (!cursos || cursos.length === 0) {
+                                container.innerHTML = '<div class="dashboard-card"><h3>No tienes cursos inscritos aún.</h3></div>';
+                            } else {
+                                container.innerHTML = '';
+                                cursos.forEach(curso => {
+                                    const fecha = new Date(curso.ultima_actualizacion);
+                                    const fechaStr = fecha.toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric' }) + ' ' + fecha.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                                    const completado = curso.completado ? '<div class="certificado" style="background:#e8f5e9;color:#388e3c;border-left:4px solid #388e3c;padding:7px 16px;border-radius:5px;font-size:1rem;font-weight:600;margin-top:0.5rem;"><i class=\'fas fa-certificate\'></i> Certificado disponible</div>' : '';
+                                    card = document.createElement('div');
+                                    card.className = 'dashboard-card';
+                                    card.innerHTML = `
+                                        <div class="icon"><i class="fas fa-chart-line"></i></div>
+                                        <h3>${curso.titulo}</h3>
+                                        <div style="margin: 0.7rem 0; background: #f0f0f0; border-radius: 10px; overflow: hidden; height: 13px;">
+                                            <div style="background: linear-gradient(90deg, #1dd1a1, #54a0ff); height: 100%; width: ${curso.progreso}%; transition: width 0.3s;"></div>
+                                        </div>
+                                        <p>${curso.progreso}% completado</p>
+                                        <p style='font-size:0.95em;color:#888;margin:0.3em 0 0 0;'>Última actualización: ${fechaStr}</p>
+                                        ${completado}
+                                    `;
+                                    container.appendChild(card);
+                                });
+                            }
+                        })
+                        .catch(() => {
+                            document.getElementById('progress-cards').innerHTML = '<div class="dashboard-card"><h3>Error de conexión al cargar el progreso.</h3></div>';
+                        });
                 }
             })
             .catch(() => {
@@ -66,6 +99,5 @@
             });
     });
     </script>
-    <script src="assets/js/dashboard.js" defer></script>
 </body>
 </html>

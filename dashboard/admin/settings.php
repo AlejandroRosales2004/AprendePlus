@@ -2,7 +2,7 @@
 // Verificar sesión de administrador
 session_start();
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
-    header('Location: ../../frontend/login.html');
+    header('Location: /AprendePlus/frontend/login.html');
     exit();
 }
 
@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Aquí iría la lógica para guardar la configuración
     $message = 'Configuración guardada correctamente (simulado).';
 }
+
+require_once __DIR__ . '/../includes/bubble_background.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Configuración | Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/AprendePlus/assets/css/bubble-background.css">
     <style>
         :root {
             --verde-suave: #a8e6cf;
@@ -30,26 +33,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --azul-oscuro: #64b5f6;
             --blanco: #ffffff;
             --sombra: 0 10px 20px rgba(0,0,0,0.1);
+            --glass: rgba(255,255,255,0.82);
         }
-        body {
-            background: linear-gradient(135deg, var(--verde-suave), var(--azul-claro));
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: transparent;
             min-height: 100vh;
             color: #333;
-            font-family: 'Poppins', sans-serif;
+            height: 100%;
+        }
+        body {
+            min-height: 100vh;
+            width: 100vw;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
-        .settings-form {
-            background-color: var(--blanco);
-            padding: 2.5rem 2rem 2rem 2rem;
-            border-radius: 15px;
-            box-shadow: var(--sombra);
-            max-width: 400px;
-            width: 100%;
-            margin: 2rem auto;
+        .admin-panel {
+            min-height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
         }
-        .settings-form h2 {
+        .glass-bubble-admin {
+            background: var(--glass);
+            border-radius: 32px;
+            box-shadow: 0 8px 40px 0 rgba(44,62,80,0.13);
+            padding: 2.5rem 2.5rem 2.2rem 2.5rem;
+            max-width: 430px;
+            margin: 2.5rem auto;
+            position: relative;
+            z-index: 2;
+            min-width: 320px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .glass-bubble-admin h2 {
             text-align: center;
             color: var(--azul-oscuro);
             margin-bottom: 1.5rem;
@@ -104,22 +133,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 4px;
             font-size: 1rem;
         }
-        @media (max-width: 500px) {
-            .settings-form {
-                padding: 1.2rem 0.5rem 1rem 0.5rem;
+        @media (max-width: 600px) {
+            .glass-bubble-admin {
+                padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+                margin: 1.2rem auto;
+                max-width: 98vw;
             }
-            .settings-form h2 {
+            .glass-bubble-admin h2 {
                 font-size: 1.3rem;
             }
         }
     </style>
-    <script src="../assets/js/admin_session.js"></script>
+    <script src="/AprendePlus/dashboard/admin/assets/js/admin_session.js"></script>
 </head>
 <body>
-    <nav style="width:100%;text-align:right;margin-bottom:1rem;">
-        <a href="../../backend/auth/logout.php" id="logoutBtn" style="display:none;color:#e74a3b;font-weight:600;text-decoration:none;margin-right:1.5rem;">Cerrar Sesión</a>
+<?php renderBubbleBackground(); ?>
+<div class="admin-panel">
+    <nav style="width:100%;text-align:right;margin-bottom:1rem;position:relative;z-index:2;">
+        <a href="/AprendePlus/backend/auth/logout.php" id="logoutBtn" style="display:none;color:#e74a3b;font-weight:600;text-decoration:none;margin-right:1.5rem;">Cerrar Sesión</a>
     </nav>
-    <form class="settings-form" method="post">
+    <form class="glass-bubble-admin" method="post">
         <h2><i class="fas fa-cog"></i> Configuración General</h2>
         <?php if ($message): ?>
             <div class="message"><?php echo htmlspecialchars($message); ?></div>
@@ -132,5 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <button type="submit"><i class="fas fa-save"></i> Guardar Cambios</button>
     </form>
+</div>
 </body>
 </html>

@@ -17,6 +17,6 @@ if (ini_get("session.use_cookies")) {
 session_destroy();
 
 // 4. Redirigir al login con mensaje de éxito
-header('Location: ../login.html?logout=success');
+header('Location: /AprendePlus/frontend/login.html?logout=success');
 exit;
 ?>

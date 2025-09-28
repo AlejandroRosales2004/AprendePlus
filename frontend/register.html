@@ -274,15 +274,22 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('../backend/auth/check_session.php')
-                .then(res => res.json())
+            // Utilidad para rutas backend robustas
+            function getBackendPath(file) {
+                if (window.location.pathname.includes('/frontend/')) {
+                    return '../backend/auth/' + file;
+                }
+                return 'backend/auth/' + file;
+            }
+            // Redirección si ya hay sesión activa
+            fetch(getBackendPath('check_session.php'))
+                .then(res => res.ok ? res.json().catch(() => null) : null)
                 .then(data => {
-                    if (data.logged_in && data.user && data.user.role) {
-                        // Redirige automáticamente al dashboard correcto según el rol
+                    if (data && data.logged_in && data.user && data.user.role) {
                         let dashboardUrl = '';
                         switch (data.user.role) {
                             case 'student':
-                                dashboardUrl = 'dashboard.html';
+                                dashboardUrl = '../dashboard/student/dashboard.php';
                                 break;
                             case 'admin':
                                 dashboardUrl = '../dashboard/admin/all_courses.php';
@@ -291,26 +298,22 @@
                                 dashboardUrl = '../dashboard/instructor/my_courses.php';
                                 break;
                             default:
-                                dashboardUrl = 'dashboard.html';
+                                dashboardUrl = '../dashboard/student/dashboard.php';
                         }
                         window.location.href = dashboardUrl;
                     }
                 });
-            
+            // Registro
             document.getElementById('registerForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
                 const submitBtn = document.getElementById('submitBtn');
                 const originalText = submitBtn.innerHTML;
-                
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
                 submitBtn.disabled = true;
-                
                 const name = document.getElementById('name').value;
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
-
                 if (password !== confirmPassword) {
                     Swal.fire({
                         icon: 'error',
@@ -322,41 +325,31 @@
                     submitBtn.disabled = false;
                     return;
                 }
-                
                 try {
-                    const response = await fetch('http://localhost/AprendePlus/backend/auth/register.php', {
+                    const response = await fetch(getBackendPath('register.php'), {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name, email, password })
                     });
-
                     let result;
-                    try {
-                        result = await response.json();
-                    } catch (jsonError) {
-                        throw new Error('La respuesta del servidor no es válida.');
-                    }
-
-                    if (response.ok) {
+                    try { result = await response.json(); }
+                    catch { throw new Error('Respuesta del servidor no es válida.'); }
+                    if (response.ok && result.success) {
                         await Swal.fire({
                             icon: 'success',
-                            title: '¡Registro Exitoso!',
-                            text: result.message || 'Tu cuenta ha sido creada con éxito',
+                            title: '¡Registro exitoso!',
+                            text: result.message || 'Te has registrado correctamente.',
                             confirmButtonColor: '#64b5f6'
                         });
-
-                        // Redirigir al inicio de sesión
                         window.location.href = 'login.html';
                     } else {
-                        throw new Error(result.error || 'Error al registrarse');
+                        throw new Error(result && result.error ? result.error : 'Error al registrar');
                     }
                 } catch (error) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: error.message,
+                        text: error.message || 'No se pudo conectar con el servidor.',
                         confirmButtonColor: '#64b5f6'
                     });
                 } finally {
