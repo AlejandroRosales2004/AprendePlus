@@ -140,11 +140,11 @@
             box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.2);
         }
         
-        /* Contenedor de contraseña con botón de toggle */
+        /* Contenedor de contraseña con botón de toggle MEJORADO */
         .password-container {
             position: relative;
         }
-        
+
         .toggle-password {
             position: absolute;
             right: 12px;
@@ -154,15 +154,26 @@
             border: none;
             color: #666;
             cursor: pointer;
-            padding: 5px;
-            font-size: 16px;
-            transition: color 0.3s ease;
+            padding: 4px;
+            font-size: 14px;
+            width: 24px;
+            height: 24px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
-        
+
         .toggle-password:hover {
+            background: #f0f0f0;
             color: var(--azul-oscuro);
         }
-        
+
+        /* Ajustar el padding del input para el botón */
+        .password-container input {
+            padding-right: 45px; /* Espacio para el botón del ojo */
+        }
         button {
             width: 100%;
             padding: 14px;
