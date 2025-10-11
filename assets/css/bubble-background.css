@@ -1,35 +1,95 @@
-/* Fondo animado de burbujas reutilizable */
+/* Fondo base */
+body {
+    position: relative;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+}
+
+/* Contenedor de burbujas */
 .bubble-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  overflow: hidden;
-  background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
 }
+
+/* Estilo base de burbujas */
 .bubble {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.35;
-  background: radial-gradient(circle at 30% 30%, #aee1f9 60%, #fff0 100%);
-  animation: floatBubble 38s linear infinite;
-  pointer-events: none;
-  filter: blur(2px);
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: floatBubble linear infinite;
+    /* Colores pastel variados */
+    background: radial-gradient(circle at 30% 30%, #ffe0f7 60%, #fbc2eb 100%);
 }
-.bubble:nth-child(1) { width: 120px; height: 120px; left: 10vw; top: 70vh; background: radial-gradient(circle at 30% 30%, #aee1f9 60%, #fff0 100%); animation-duration: 48s; animation-delay: 0s; }
-.bubble:nth-child(2) { width: 80px; height: 80px; left: 60vw; top: 80vh; background: radial-gradient(circle at 70% 70%, #f7d9e3 60%, #fff0 100%); animation-duration: 60s; animation-delay: 5s; }
-.bubble:nth-child(3) { width: 200px; height: 200px; left: 80vw; top: 60vh; background: radial-gradient(circle at 50% 50%, #b6f7e3 60%, #fff0 100%); animation-duration: 70s; animation-delay: 10s; }
-.bubble:nth-child(4) { width: 100px; height: 100px; left: 30vw; top: 10vh; background: radial-gradient(circle at 60% 60%, #f9e7ae 60%, #fff0 100%); animation-duration: 55s; animation-delay: 2s; }
-.bubble:nth-child(5) { width: 150px; height: 150px; left: 70vw; top: 20vh; background: radial-gradient(circle at 40% 40%, #e1b6f7 60%, #fff0 100%); animation-duration: 65s; animation-delay: 7s; }
-.bubble:nth-child(6) { width: 60px; height: 60px; left: 50vw; top: 50vh; background: radial-gradient(circle at 60% 60%, #f7b6b6 60%, #fff0 100%); animation-duration: 50s; animation-delay: 3s; }
-.bubble:nth-child(7) { width: 90px; height: 90px; left: 20vw; top: 40vh; background: radial-gradient(circle at 40% 40%, #b6f7e3 60%, #fff0 100%); animation-duration: 58s; animation-delay: 8s; }
-.bubble:nth-child(8) { width: 110px; height: 110px; left: 80vw; top: 10vh; background: radial-gradient(circle at 60% 60%, #f7e1b6 60%, #fff0 100%); animation-duration: 62s; animation-delay: 4s; }
-.bubble:nth-child(9) { width: 70px; height: 70px; left: 40vw; top: 80vh; background: radial-gradient(circle at 50% 50%, #b6d6f7 60%, #fff0 100%); animation-duration: 54s; animation-delay: 6s; }
-.bubble:nth-child(10) { width: 130px; height: 130px; left: 60vw; top: 30vh; background: radial-gradient(circle at 30% 30%, #f7b6e1 60%, #fff0 100%); animation-duration: 68s; animation-delay: 9s; }
+
+/* Posiciones y tamaños aleatorios para las burbujas */
+.bubble:nth-child(1) { 
+    width: 80px; height: 80px; left: 10%; animation-duration: 15s; 
+    background: radial-gradient(circle at 70% 70%, #c1f7fa 60%, #b2f7ef 100%);
+}
+.bubble:nth-child(2) { 
+    width: 120px; height: 120px; left: 30%; animation-duration: 20s; 
+    background: radial-gradient(circle at 50% 50%, #f9fbe7 60%, #e0c3fc 100%);
+}
+.bubble:nth-child(3) { 
+    width: 60px; height: 60px; left: 50%; animation-duration: 12s; 
+    background: radial-gradient(circle at 60% 40%, #d0e6ff 60%, #fbc2eb 100%);
+}
+.bubble:nth-child(4) { 
+    width: 100px; height: 100px; left: 70%; animation-duration: 18s; 
+    background: radial-gradient(circle at 40% 60%, #ffe0f7 60%, #b2f7ef 100%);
+}
+.bubble:nth-child(5) { 
+    width: 90px; height: 90px; left: 90%; animation-duration: 25s; 
+    background: radial-gradient(circle at 30% 30%, #ffe0f7 60%, #fbc2eb 100%);
+}
+.bubble:nth-child(6) { 
+    width: 70px; height: 70px; left: 20%; animation-duration: 22s; 
+    background: radial-gradient(circle at 70% 70%, #c1f7fa 60%, #b2f7ef 100%);
+}
+.bubble:nth-child(7) { 
+    width: 110px; height: 110px; left: 40%; animation-duration: 16s; 
+    background: radial-gradient(circle at 50% 50%, #f9fbe7 60%, #e0c3fc 100%);
+}
+.bubble:nth-child(8) { 
+    width: 85px; height: 85px; left: 60%; animation-duration: 19s; 
+    background: radial-gradient(circle at 60% 40%, #d0e6ff 60%, #fbc2eb 100%);
+}
+.bubble:nth-child(9) { 
+    width: 95px; height: 95px; left: 80%; animation-duration: 14s; 
+    background: radial-gradient(circle at 40% 60%, #ffe0f7 60%, #b2f7ef 100%);
+}
+.bubble:nth-child(10) { 
+    width: 75px; height: 75px; left: 15%; animation-duration: 21s; 
+    background: radial-gradient(circle at 30% 30%, #ffe0f7 60%, #fbc2eb 100%);
+}
+
+/* Animación de flotación */
 @keyframes floatBubble {
-  0% { transform: translateY(0) scale(1); opacity: 0.35; }
-  50% { transform: translateY(-60vh) scale(1.1); opacity: 0.5; }
-  100% { transform: translateY(0) scale(1); opacity: 0.35; }
+    0% {
+        transform: translateY(100vh) scale(1);
+        opacity: 0.7;
+    }
+    80% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-10vh) scale(1.1);
+        opacity: 0;
+    }
+}
+
+/* Asegurar que el contenido esté sobre las burbujas */
+.content {
+    position: relative;
+    z-index: 1;
 }

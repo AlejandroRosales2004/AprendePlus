@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aprende+ - Plataforma de aprendizaje online</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/bubble-background.css">
+    <link rel="stylesheet" href="../assets/css/bubble-background.css">
     <style>
         :root {
             --verde-suave: #a8e6cf;
@@ -21,7 +21,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
         }
         
         body {
@@ -32,6 +32,7 @@
             overflow-x: hidden;
         }
         
+        /* HEADER RESPONSIVO */
         header {
             background-color: var(--blanco);
             box-shadow: var(--sombra);
@@ -39,29 +40,42 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .logo {
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-shrink: 0;
         }
         
         .logo img {
             height: 40px;
             border-radius: 50%;
+            width: auto;
         }
         
         .logo h1 {
             font-size: 1.5rem;
             color: var(--azul-oscuro);
             font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        /* NAVEGACIÓN RESPONSIVA */
+        nav {
+            display: flex;
+            align-items: center;
         }
         
         nav ul {
             display: flex;
             list-style: none;
-            gap: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         nav a {
@@ -71,6 +85,8 @@
             padding: 0.5rem 1rem;
             border-radius: 20px;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.9rem;
         }
         
         nav a:hover {
@@ -87,6 +103,10 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.9rem;
         }
         
         .btn:hover {
@@ -98,49 +118,54 @@
             background: var(--blanco);
         }
         
+        /* HERO RESPONSIVO */
         .hero {
-            padding: 5rem 2rem;
+            padding: 3rem 1rem;
             text-align: center;
             max-width: 1200px;
             margin: 0 auto;
         }
         
         .hero h2 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             margin-bottom: 1.5rem;
             background: linear-gradient(90deg, var(--azul-oscuro), #333);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            line-height: 1.2;
         }
         
         .hero p {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
             margin-bottom: 2rem;
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            line-height: 1.6;
         }
         
         .cta-buttons {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             margin-top: 2rem;
+            flex-wrap: wrap;
         }
         
+        /* FEATURES RESPONSIVO */
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 3rem 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
         }
         
         .feature-card {
             background-color: var(--blanco);
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 15px;
             box-shadow: var(--sombra);
             transition: all 0.3s ease;
@@ -148,7 +173,7 @@
         }
         
         .feature-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-5px);
         }
         
         .feature-icon {
@@ -157,29 +182,184 @@
             margin-bottom: 1rem;
         }
         
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .feature-card p {
+            line-height: 1.6;
+            color: #666;
+        }
+        
+        /* TESTIMONIOS RESPONSIVOS */
+        .testimonios {
+            background: var(--blanco);
+            padding: 2rem 1rem;
+        }
+        
+        .testimonios h2 {
+            text-align: center;
+            color: var(--azul-oscuro);
+            margin-bottom: 2rem;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+        }
+        
+        .testimonios-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .testimonio-card {
+            background: #f7f7f7;
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .testimonio-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .testimonio-text {
+            font-style: italic;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonio-author {
+            display: block;
+            margin-top: 1rem;
+            color: var(--azul-oscuro);
+            font-weight: 600;
+        }
+        
+        /* FOOTER RESPONSIVO */
         footer {
             background-color: #333;
             color: white;
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
             margin-top: 3rem;
+        }
+        
+        .social-links {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--azul-oscuro);
+        }
+        
+        /* MEDIA QUERIES MEJORADAS */
+        @media (max-width: 1024px) {
+            header {
+                padding: 1rem;
+            }
+            
+            nav ul {
+                gap: 10px;
+            }
+            
+            nav a {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
         }
         
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
+                text-align: center;
                 gap: 1rem;
+            }
+            
+            .logo {
+                justify-content: center;
             }
             
             nav ul {
                 flex-direction: column;
                 align-items: center;
                 gap: 10px;
+                width: 100%;
+            }
+            
+            nav a {
+                display: block;
+                width: 200px;
+                text-align: center;
             }
             
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
+            }
+            
+            .btn {
+                width: 250px;
+                max-width: 100%;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .hero {
+                padding: 2rem 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 1.3rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .testimonios-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .feature-card {
+                padding: 1rem;
+            }
+            
+            nav a {
+                width: 180px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* BURBUJAS RESPONSIVAS */
+        @media (max-width: 768px) {
+            .bubble {
+                /* Reducir tamaño de burbujas en móviles */
+                transform: scale(0.7);
             }
         }
     </style>
@@ -197,9 +377,10 @@
         <div class="bubble"></div>
         <div class="bubble"></div>
     </div>
+    
     <header>
         <div class="logo">
-            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;" onerror="this.onerror=null;this.src='https://via.placeholder.com/50';">
+            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" onerror="this.onerror=null;this.src='../assets/img/APRENDEMASLOGO.png';">
             <h1>Aprende+</h1>
         </div>
         <nav>
@@ -249,81 +430,75 @@
                 <p>Obtén certificados reconocidos al completar tus cursos.</p>
             </div>
         </section>
-        
-        <footer>
+
+        <!-- Testimonios RESPONSIVOS -->
+        <section class="testimonios">
+            <h2>Testimonios</h2>
+            <div class="testimonios-container">
+                <div class="testimonio-card">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Testimonio 1" class="testimonio-img">
+                    <p class="testimonio-text">"Aprende+ me ayudó a conseguir mi primer empleo en tecnología. ¡Recomendado!"</p>
+                    <strong class="testimonio-author">Carlos M.</strong>
+                </div>
+                <div class="testimonio-card">
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Testimonio 2" class="testimonio-img">
+                    <p class="testimonio-text">"La plataforma es intuitiva y los cursos son de calidad. ¡Me encantó la experiencia!"</p>
+                    <strong class="testimonio-author">Ana P.</strong>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
         <p>&copy; 2023 Aprende+. Todos los derechos reservados.</p>
-        <div style="margin-top: 1rem;">
-            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-twitter"></i></a>
-            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-instagram"></i></a>
-            <a href="#" style="color: white; margin: 0 10px;"><i class="fab fa-linkedin-in"></i></a>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
         </div>
     </footer>
 
-    <!-- <script src="assets/js/main.js"></script> -->
     <script>
-        // Script para mostrar/ocultar botones de sesión antes de cualquier lógica de login
+        // Script optimizado - eliminar duplicados
         document.addEventListener('DOMContentLoaded', function() {
             function getBackendPath(file) {
-                if (window.location.pathname.includes('/frontend/')) {
-                    return '../backend/auth/' + file;
-                }
-                return 'backend/auth/' + file;
+                return window.location.pathname.includes('/frontend/') 
+                    ? '../backend/auth/' + file 
+                    : 'backend/auth/' + file;
             }
+
+            // Verificar sesión y mostrar botones apropiados
             fetch(getBackendPath('check_session.php'))
                 .then(res => res.json())
                 .then(data => {
+                    const loginBtn = document.getElementById('loginBtn');
+                    const logoutBtn = document.getElementById('logoutBtn');
+                    
                     if (data.logged_in) {
-                        document.getElementById('logoutBtn').style.display = 'inline-block';
-                        document.getElementById('loginBtn').style.display = 'none';
+                        loginBtn.style.display = 'none';
+                        logoutBtn.style.display = 'inline-block';
+                        
+                        // Redirección automática si hay sesión
+                        if (data.user && data.user.role) {
+                            const dashboards = {
+                                'student': '../dashboard/student/dashboard.php',
+                                'admin': '../dashboard/admin/all_courses.php',
+                                'instructor': '../dashboard/instructor/my_courses.php'
+                            };
+                            window.location.href = dashboards[data.user.role] || dashboards.student;
+                        }
                     } else {
-                        document.getElementById('logoutBtn').style.display = 'none';
-                        document.getElementById('loginBtn').style.display = 'inline-block';
+                        loginBtn.style.display = 'inline-block';
+                        logoutBtn.style.display = 'none';
                     }
                 })
                 .catch(() => {
-                    document.getElementById('logoutBtn').style.display = 'none';
+                    // En caso de error, mostrar solo login
                     document.getElementById('loginBtn').style.display = 'inline-block';
+                    document.getElementById('logoutBtn').style.display = 'none';
                 });
         });
-
-        function getBackendPath(file) {
-            if (window.location.pathname.includes('/frontend/')) {
-                return '../backend/auth/' + file;
-            }
-            return 'backend/auth/' + file;
-        }
-        function isPhpServer() {
-            return location.protocol.startsWith('http') &&
-                (location.hostname === 'localhost' || location.hostname === '127.0.0.1') &&
-                location.port !== '5500';
-        }
-        if (isPhpServer()) {
-            fetch(getBackendPath('check_session.php'))
-                .then(async res => {
-                    const text = await res.text();
-                    try {
-                        const data = JSON.parse(text);
-                        if (data && typeof data === 'object' && data.logged_in && data.user && data.user.role) {
-                            let dashboardUrl = '';
-                            switch (data.user.role) {
-                                case 'student':
-                                    dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
-                                    break;
-                                case 'admin':
-                                    dashboardUrl = '/AprendePlus/dashboard/admin/all_courses.php';
-                                    break;
-                                case 'instructor':
-                                    dashboardUrl = '/AprendePlus/dashboard/instructor/my_courses.php';
-                                    break;
-                                default:
-                                    dashboardUrl = '/AprendePlus/dashboard/student/dashboard.php';
-                            }
-                            window.location.href = dashboardUrl;
-                        }
-                    } catch (e) {}
-                });
-        }
     </script>
 </body>
 </html>

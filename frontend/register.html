@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Aprende+</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -19,16 +19,49 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
         
         body {
-            background: linear-gradient( var(--azul-claro));
-            height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+        }
+        
+        /* Burbujas de fondo */
+        .bubble-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: floatBubble linear infinite;
+            background: radial-gradient(circle at 30% 30%, #ffe0f7 60%, #fbc2eb 100%);
+        }
+        
+        .bubble:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-duration: 15s; }
+        .bubble:nth-child(2) { width: 120px; height: 120px; left: 30%; animation-duration: 20s; background: radial-gradient(circle at 70% 70%, #c1f7fa 60%, #b2f7ef 100%); }
+        .bubble:nth-child(3) { width: 60px; height: 60px; left: 50%; animation-duration: 12s; background: radial-gradient(circle at 50% 50%, #f9fbe7 60%, #e0c3fc 100%); }
+        .bubble:nth-child(4) { width: 100px; height: 100px; left: 70%; animation-duration: 18s; background: radial-gradient(circle at 60% 40%, #d0e6ff 60%, #fbc2eb 100%); }
+        .bubble:nth-child(5) { width: 90px; height: 90px; left: 90%; animation-duration: 25s; background: radial-gradient(circle at 40% 60%, #ffe0f7 60%, #b2f7ef 100%); }
+        
+        @keyframes floatBubble {
+            0% { transform: translateY(100vh) scale(1); opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { transform: translateY(-10vh) scale(1.1); opacity: 0; }
         }
         
         .container {
@@ -107,6 +140,29 @@
             box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.2);
         }
         
+        /* Contenedor de contraseña con botón de toggle */
+        .password-container {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .toggle-password:hover {
+            color: var(--azul-oscuro);
+        }
+        
         button {
             width: 100%;
             padding: 14px;
@@ -158,17 +214,16 @@
         }
         
         .logo h1 {
-            color: #333;
+            color: var(--azul-oscuro);
             font-size: 24px;
             margin-top: 5px;
+            font-weight: 600;
         }
 
         nav {
-            width: 100%;
-            max-width: 450px;
-            margin: 0 auto 20px;
-            display: flex;
-            justify-content: flex-end;
+            position: absolute;
+            top: 20px;
+            right: 20px;
         }
         
         nav ul {
@@ -176,62 +231,145 @@
             padding: 0;
             margin: 0;
             display: flex;
-        }
-        
-        nav ul li {
-            margin-left: 20px;
+            gap: 15px;
         }
         
         nav a {
             text-decoration: none;
-            color: var(--azul-oscuro);
+            color: #333;
             font-weight: 500;
             font-size: 14px;
-            position: relative;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
         }
         
-        nav a::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            bottom: -3px;
-            left: 0;
-            background: linear-gradient(90deg, var(--verde-suave), var(--azul-oscuro));
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        
-        nav a:hover::after {
-            transform: scaleX(1);
+        nav a:hover {
+            background-color: var(--azul-oscuro);
+            color: white;
         }
         
         .btn {
             background: linear-gradient(90deg, var(--verde-suave), var(--azul-oscuro));
-            padding: 10px 15px;
-            border-radius: 8px;
-            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #333;
             font-weight: 600;
             font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 1px;
             display: inline-block;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
         
         .btn:hover {
             background: linear-gradient(90deg, var(--azul-oscuro), var(--verde-suave));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 181, 246, 0.4);
+        }
+
+        /* Términos y condiciones */
+        .terms {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .terms label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        .terms input[type="checkbox"] {
+            width: auto;
+            margin-top: 2px;
+        }
+        
+        .terms a {
+            color: var(--azul-oscuro);
+            text-decoration: none;
+        }
+        
+        .terms a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            nav {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+                display: flex;
+                justify-content: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            body {
+                flex-direction: column;
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 15px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            nav a {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Fondo con burbujas -->
+    <div class="bubble-background">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+    
+    <!-- Navegación -->
+    <nav>
+        <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="login.html" class="btn">Iniciar Sesión</a></li>
+        </ul>
+    </nav>
+
+    <!-- Formulario de registro -->
     <div class="container">
         <div class="logo">
-            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;">
-            <h1 style="font-size: 24px; color: var(--azul-oscuro);">Aprende+</h1>
+            <img src="assets/img/APRENDEMASLOGO.png" alt="Logo Aprende+" style="width: 50px; height: auto;" onerror="this.onerror=null;this.src='../assets/img/APRENDEMASLOGO.png';">
+            <h1>Aprende+</h1>
         </div>
         
-        <h2>Registro</h2>
+        <h2>Crear Cuenta</h2>
         
         <form id="registerForm">
             <div class="form-group">
@@ -246,118 +384,168 @@
             
             <div class="form-group">
                 <label for="password">Contraseña</label>
-                <input type="password" id="password" name="password" required placeholder="Crea una contraseña">
+                <div class="password-container">
+                    <input type="password" id="password" name="password" required placeholder="Crea una contraseña segura" minlength="6">
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="confirmPassword">Confirmar Contraseña</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Repite tu contraseña">
+                <div class="password-container">
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Repite tu contraseña" minlength="6">
+                    <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="terms">
+                <label>
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <span>Acepto los <a href="#" onclick="event.preventDefault(); showTerms();">términos y condiciones</a> y la <a href="#" onclick="event.preventDefault(); showPrivacy();">política de privacidad</a></span>
+                </label>
             </div>
             
-            <button type="submit" id="submitBtn">Registrarse</button>
+            <button type="submit" id="submitBtn">
+                <i class="fas fa-user-plus"></i> Crear Cuenta
+            </button>
         </form>
         
         <div class="register-link">
-            ¿Ya tienes una cuenta? <a href="login.html">Inicia Sesión</a>
+            ¿Ya tienes una cuenta? <a href="login.html">Inicia Sesión aquí</a>
         </div>
     </div>
-
-    <nav>
-        <ul>
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="login.html" class="btn">Iniciar Sesión</a></li>
-        </ul>
-    </nav>
 
     <!-- SweetAlert para notificaciones -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Utilidad para rutas backend robustas
-            function getBackendPath(file) {
-                if (window.location.pathname.includes('/frontend/')) {
-                    return '../backend/auth/' + file;
-                }
-                return 'backend/auth/' + file;
-            }
-            // Redirección si ya hay sesión activa
-            fetch(getBackendPath('check_session.php'))
-                .then(res => res.ok ? res.json().catch(() => null) : null)
-                .then(data => {
-                    if (data && data.logged_in && data.user && data.user.role) {
-                        let dashboardUrl = '';
-                        switch (data.user.role) {
-                            case 'student':
-                                dashboardUrl = '../dashboard/student/dashboard.php';
-                                break;
-                            case 'admin':
-                                dashboardUrl = '../dashboard/admin/all_courses.php';
-                                break;
-                            case 'instructor':
-                                dashboardUrl = '../dashboard/instructor/my_courses.php';
-                                break;
-                            default:
-                                dashboardUrl = '../dashboard/student/dashboard.php';
-                        }
-                        window.location.href = dashboardUrl;
-                    }
-                });
-            // Registro
-            document.getElementById('registerForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const submitBtn = document.getElementById('submitBtn');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando...';
-                submitBtn.disabled = true;
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                if (password !== confirmPassword) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Las contraseñas no coinciden',
-                        confirmButtonColor: '#64b5f6'
-                    });
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                    return;
-                }
-                try {
-                    const response = await fetch(getBackendPath('register.php'), {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, email, password })
-                    });
-                    let result;
-                    try { result = await response.json(); }
-                    catch { throw new Error('Respuesta del servidor no es válida.'); }
-                    if (response.ok && result.success) {
-                        await Swal.fire({
-                            icon: 'success',
-                            title: '¡Registro exitoso!',
-                            text: result.message || 'Te has registrado correctamente.',
-                            confirmButtonColor: '#64b5f6'
-                        });
-                        window.location.href = 'login.html';
-                    } else {
-                        throw new Error(result && result.error ? result.error : 'Error al registrar');
-                    }
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.message || 'No se pudo conectar con el servidor.',
-                        confirmButtonColor: '#64b5f6'
-                    });
-                } finally {
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }
-            });
+   <script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle contraseña compacto
+    function setupPasswordToggle(passId, toggleId) {
+        const pass = document.getElementById(passId);
+        const toggle = document.getElementById(toggleId);
+        
+        toggle.addEventListener('click', () => {
+            const type = pass.type === 'password' ? 'text' : 'password';
+            pass.type = type;
+            toggle.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
         });
-    </script>
+    }
+
+    // Configurar ambos toggles
+    setupPasswordToggle('password', 'togglePassword');
+    setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
+
+    // Rutas backend
+    function getBackendPath(file) {
+        return window.location.pathname.includes('/frontend/') 
+            ? '../backend/auth/' + file 
+            : 'backend/auth/' + file;
+    }
+
+    // Redirección si hay sesión
+    fetch(getBackendPath('check_session.php'))
+        .then(res => res.ok ? res.json().catch(() => null) : null)
+        .then(data => {
+            if (data?.logged_in && data.user?.role) {
+                const dashboards = {
+                    'student': '../dashboard/student/dashboard.php',
+                    'admin': '../dashboard/admin/all_courses.php',
+                    'instructor': '../dashboard/instructor/my_courses.php'
+                };
+                window.location.href = dashboards[data.user.role] || dashboards.student;
+            }
+        });
+
+    // Términos y privacidad
+    window.showTerms = () => Swal.fire({
+        title: 'Términos y Condiciones',
+        html: `<div style="text-align: left; max-height: 300px; overflow-y: auto; font-size: 14px;">
+            <p><strong>1. Aceptación:</strong> Al registrarte aceptas nuestros términos.</p>
+            <p><strong>2. Uso educativo:</strong> Plataforma para fines educativos.</p>
+            <p><strong>3. Propiedad intelectual:</strong> Contento protegido por derechos.</p>
+            <p><strong>4. Cuenta:</strong> Responsable de tu cuenta y contraseña.</p>
+        </div>`,
+        width: 500,
+        confirmButtonColor: '#64b5f6'
+    });
+
+    window.showPrivacy = () => Swal.fire({
+        title: 'Política de Privacidad',
+        html: `<div style="text-align: left; max-height: 300px; overflow-y: auto; font-size: 14px;">
+            <p><strong>1. Datos:</strong> Recopilamos nombre, email y progreso.</p>
+            <p><strong>2. Uso:</strong> Personalizar experiencia educativa.</p>
+            <p><strong>3. Seguridad:</strong> Protegemos tu información.</p>
+            <p><strong>4. Derechos:</strong> Acceso y control de tus datos.</p>
+        </div>`,
+        width: 500,
+        confirmButtonColor: '#64b5f6'
+    });
+
+    // Registro
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const terms = document.getElementById('terms').checked;
+
+        // Validaciones rápidas
+        if (!terms) {
+            Swal.fire({icon: 'error', title: 'Error', text: 'Acepta los términos', confirmButtonColor: '#64b5f6'});
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Swal.fire({icon: 'error', title: 'Error', text: 'Contraseñas no coinciden', confirmButtonColor: '#64b5f6'});
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            return;
+        }
+
+        if (password.length < 6) {
+            Swal.fire({icon: 'error', title: 'Error', text: 'Mínimo 6 caracteres', confirmButtonColor: '#64b5f6'});
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            return;
+        }
+
+        try {
+            const response = await fetch(getBackendPath('register.php'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            const result = await response.json().catch(() => null);
+            
+            if (response.ok && result?.success) {
+                await Swal.fire({icon: 'success', title: '¡Éxito!', text: 'Cuenta creada', confirmButtonColor: '#64b5f6'});
+                window.location.href = 'login.html';
+            } else {
+                throw new Error(result?.error || 'Error en registro');
+            }
+        } catch (error) {
+            Swal.fire({icon: 'error', title: 'Error', text: error.message, confirmButtonColor: '#64b5f6'});
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+});
+</script>
 </body>
 </html>
